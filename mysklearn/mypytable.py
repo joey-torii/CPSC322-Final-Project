@@ -1,5 +1,3 @@
-import mysklearn.myutils as myutils
-
 """
 Programmer: Alex Giacobbi
 Class: CPSC 322-02, Spring 2021
@@ -10,7 +8,7 @@ MyPyTable has two attributes that represent a table header and the corresponding
 data. 
 """
 
-
+import mysklearn.myutils as myutils
 import copy
 import csv 
 import statistics

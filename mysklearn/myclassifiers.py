@@ -1,3 +1,13 @@
+"""
+Programmer: Alex Giacobbi and Joseph Torii
+Class: CPSC 322-02, Spring 2021
+Semester Project
+22 April 2021
+
+Description: This file includes all of the classifiers that we have done throughout 
+the PA's and the new MyRandomForestClassifier. 
+"""
+
 import mysklearn.myutils as myutils
 import numpy as np
 import operator
@@ -55,7 +65,6 @@ class MySimpleLinearRegressor:
             y_predicted(list of numeric vals): The predicted target y values (parallel to X_test)
         """
         return [self.slope * val + self.intercept for val in X_test]
-
 
 class MyKNeighborsClassifier:
     """Represents a simple k nearest neighbors classifier.
@@ -150,7 +159,6 @@ class MyKNeighborsClassifier:
             y_predicted.append(max(set(labels), key=labels.count))
 
         return y_predicted
-
 
 class MyNaiveBayesClassifier:
     """Represents a Naive Bayes classifier.
@@ -251,7 +259,6 @@ class MyNaiveBayesClassifier:
 
         return y_predicted
 
-
 class MyZeroRClassifier:
     """Represents a Zero-R classifier.
 
@@ -295,7 +302,6 @@ class MyZeroRClassifier:
             y_predicted(list of obj): The predicted target y values (parallel to X_test)
         """
         return [self.prediction for _ in X_test]
-
 
 class MyRandomClassifier:
     """Represents a random classifier.
@@ -426,19 +432,58 @@ class MyDecisionTreeClassifier:
         default_header = ["att" + str(i) for i in range(0, len(self.X_train))]
         myutils.tdidt_print_rules(self.tree, "", class_name, default_header, attribute_names)
 
-    # BONUS METHOD
-    def visualize_tree(self, dot_fname, pdf_fname, attribute_names=None):
-        """BONUS: Visualizes a tree via the open source Graphviz graph visualization package and its DOT graph language (produces .dot and .pdf files).
+
+# TODO: FINISH AND COMMENT
+class MyRandomForestClassifier:
+    """Represents a decision tree classifier.
+
+    Attributes:
+        X_train(list of list of obj): The list of training instances (samples). 
+            The shape of X_train is (n_train_samples, n_features)
+        y_train(list of obj): The target y values (parallel to X_train). 
+            The shape of y_train is n_samples
+        tree(nested list): The extracted tree model.
+
+    Notes:
+        Loosely based on sklearn's DecisionTreeClassifier: https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html
+        Terminology: instance = sample = row and attribute = feature = column
+    """
+    def __init__(self):
+        """Initializer for MyDecisionTreeClassifier.
+
+        """
+        self.X_train = None 
+        self.y_train = None
+        self.tree = None
+
+    def fit(self, X_train, y_train):
+        """Fits a decision tree classifier to X_train and y_train using the TDIDT (top down induction of decision tree) algorithm.
 
         Args:
-            dot_fname(str): The name of the .dot output file.
-            pdf_fname(str): The name of the .pdf output file generated from the .dot file.
-            attribute_names(list of str or None): A list of attribute names to use in the decision rules
-                (None if a list is not provided and the default attribute names based on indexes (e.g. "att0", "att1", ...) should be used).
+            X_train(list of list of obj): The list of training instances (samples). 
+                The shape of X_train is (n_train_samples, n_features)
+            y_train(list of obj): The target y values (parallel to X_train)
+                The shape of y_train is n_train_samples
 
-        Notes: 
-            Graphviz: https://graphviz.org/
-            DOT language: https://graphviz.org/doc/info/lang.html
-            You will need to install graphviz in the Docker container as shown in class to complete this method.
+        Notes:
+            Since TDIDT is an eager learning algorithm, this method builds a decision tree model
+                from the training data.
+            Build a decision tree using the nested list representation described in class.
+            Store the tree in the tree attribute.
+            Use attribute indexes to construct default attribute names (e.g. "att0", "att1", ...).
         """
-        pass # TODO: (BONUS) fix this
+        
+        
+    def predict(self, X_test):
+        """Makes predictions for test instances in X_test.
+
+        Args:
+            X_test(list of list of obj): The list of testing samples
+                The shape of X_test is (n_test_samples, n_features)
+
+        Returns:
+            y_predicted(list of obj): The predicted target y values (parallel to X_test)
+        """
+       
+
+   

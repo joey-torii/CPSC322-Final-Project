@@ -1,3 +1,13 @@
+"""
+Programmer: Alex Giacobbi and Joseph Torii
+Class: CPSC 322-02, Spring 2021
+Semester Project
+22 April 2021
+
+Description: This file contains the evaluations that are needed for the Jupyter Notebook visualizations
+that will be used within this project.
+"""
+
 import mysklearn.myutils as myutils
 import numpy as np
 import math

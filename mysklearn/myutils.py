@@ -1,3 +1,13 @@
+"""
+Programmer: Alex Giacobbi and Joseph Torii
+Class: CPSC 322-02, Spring 2021
+Semester Project
+22 April 2021
+
+Description: This file contains all of the helper functions that we have used for the PA's and
+the rest of this project.
+"""
+
 from mysklearn.mypytable import MyPyTable
 import os
 import random
@@ -297,13 +307,6 @@ def tdidt_print_rules(tree, rule, class_name, default_header, attribute_names):
             tdidt_print_rules(value_list[2], rule2, class_name, default_header, attribute_names)
     else: # "Leaf"
         print(rule, "THEN", class_name, "=", tree[1])
-
-
-def load_data(filename):
-    data_path = os.path.join("input_data", filename)
-    table = MyPyTable().load_from_file(data_path)
-    
-    return table
 
 
 def count_column_frequencies(table, column_name):
