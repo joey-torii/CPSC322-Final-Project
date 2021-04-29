@@ -475,7 +475,6 @@ class MyRandomForestClassifier:
             y_train(list of obj): The target y values (parallel to X_train).
                 The shape of y_train is n_samples
         '''
-
         self.X_train = copy.deepcopy(X_train)
         self.y_train = copy.deepcopy(y_train)
         self.learners = []
@@ -485,10 +484,9 @@ class MyRandomForestClassifier:
         for i in range(self.N):
             # create the bootstrap sample
             if self.seed is not None:
-                X_sample, y_sample = myutils.compute_bootstrapped_sample(self.X_train, self.y_train, self.seed)
+                X_sample, Y_sample = myutils.compute_bootstrapped_sample(self.X_train, self.y_train, self.seed)
             else:
-                X_sample, y_sample = myutils.compute_bootstrapped_sample(self.X_train, self.y_train)
-
+                X_sample, Y_sample = myutils.compute_bootstrapped_sample(self.X_train, self.y_train)
 
             # create the validation set
             X_val = [x for x in self.X_train if x not in X_sample]
@@ -496,12 +494,12 @@ class MyRandomForestClassifier:
             y_val = [self.y_train[i] for i in range(len(self.y_train)) if i in y_idxs]
 
             # get only a random subset of attributes for each sample
-            values = [i for i in range(len(self.X_train[0]))] # num of items in header
+            values = [x for x in range(len(self.X_train[0]))] # num of items in header
 
-            if self.seed is not None:
-                F_attributes = myutils.compute_random_subset(values, self.F, self.seed)
-            else:
+            if self.seed is None:
                 F_attributes = myutils.compute_random_subset(values, self.F)
+            else:
+                F_attributes = myutils.compute_random_subset(values, self.F, self.seed)
 
             # get only those attributes from the training set
             for i in range(len(X_sample)):
@@ -513,7 +511,7 @@ class MyRandomForestClassifier:
 
             # build a decision tree from the sample
             tree = MyDecisionTreeClassifier()
-            tree.fit(X_sample, y_sample)
+            tree.fit(X_sample, Y_sample)
             self.learners.append(tree)
 
             # test the trees accuracy on the validation set
@@ -521,15 +519,13 @@ class MyRandomForestClassifier:
 
             self.accuracies.append(myutils.compute_accuracy(y_pred, y_val))
 
-        # get only the best M learners
-
-        # sort the dists and move the indices to match the sorted list
+        # sort the dists and move the indices to match the sorted list 
         # by combining the two lists into a list of tuples, sorting, and unpacking
-        sorted_accs, sorted_idxs = (list(tup) for tup in zip(*sorted(zip(self.accuracies, range(len(self.learners))))))
+        sorted_accs, sorted_idxs = (list(x) for x in zip(*sorted(zip(self.accuracies, range(len(self.learners))))))
 
         # slice the lists to only include the M best learners
         self.learners = [self.learners[i] for i in range(len(self.learners)) if i in sorted_idxs[:self.M]]
-        # self.learners = sorted_learners[:M+1]
+        # self.learners = sorted_learners[:M + 1]
         self.accuracies = sorted_accs[:self.M]
 
 
@@ -537,20 +533,20 @@ class MyRandomForestClassifier:
         ''' Predicts the class labels of a set of test instances
         Args:
             X_test (list of list of obj): The list of test instances (samples).
-                    The shape of X_train is (n_train_samples, n_features)
+                The shape of X_train is (n_train_samples, n_features)
         Returns:
             y_predicted (list of labels): labels corresponding to the test set
         '''
         # get predictions from all of the trees
-        all_preds = []
+        all_predictions = []
         for tree in self.learners:
-            preds = tree.predict(X_test)
-            all_preds.append(preds)
+            predicted = tree.predict(X_test)
+            all_predictions.append(predicted)
 
         y_predicted = []
         # get the most common prediction for each x value
         for i in range(len(X_test)):
-            x_preds = [p[i] for p in all_preds]
+            x_preds = [p[i] for p in all_predictions]
 
             # get most common prediction (majority vote)
             majority = Counter(x_preds).most_common(1)
