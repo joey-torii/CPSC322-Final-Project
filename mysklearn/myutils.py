@@ -92,13 +92,11 @@ def box_plot(distributions, labels, title, x_label, y_label):
     plt.show()
 
 
-
 def load_data(filename):
     data_path = os.path.join("input_data", filename)
     table = MyPyTable().load_from_file(data_path)
     
     return table
-
 
 def convert_mpg_rating(mpg_list):
     mpg_ratings = []
@@ -326,6 +324,7 @@ def count_frequency(data):
 
     return freq
 
+
 def get_column_sum(table, column_name):
     table.convert_to_numeric()
     column = table.get_column(column_name, include_missing_values=False)
@@ -401,3 +400,51 @@ def group_by(table, group_by_col_name):
             group_subtables[group_index].append(row.copy()) # shallow copy
 
     return group_names, group_subtables
+
+
+
+##############################################################
+#
+# new functions for project
+# 
+##############################################################
+
+def compute_bootstrapped_sample(X_train, y_train, seed = None):
+    if seed is not None:
+        random.seed(seed)
+    n = len(X_train)
+    X_sample = []
+    y_sample = []
+    for _ in range(n):
+        rand_index = random.randrange(0, n)
+        X_sample.append(X_train[rand_index])
+        y_sample.append(y_train[rand_index])
+    return X_sample, y_sample
+
+def compute_random_subset(values, num_values, seed = None):
+    if seed is not None:
+        random.seed(seed)
+    shuffled = values[:] # shallow copy
+    random.shuffle(shuffled)
+    return sorted(shuffled[:num_values])
+
+def compute_accuracy(y_pred, y_test, error_rate = False):
+    '''Compute the accuracy given a set of predicted values and the actual values.
+
+    Args:
+        y_pred (list of values): The list of the model's predictions
+        y_test (list of values): The actual values
+        error_rate (bool): whether to return the accuracy of the error
+
+    Returns:
+        (float): the percent accuracy of the error
+
+    '''
+    num_right = 0
+    for i in range(len(y_pred)):
+        if y_pred[i] == y_test[i]:
+            num_right += 1
+    if error_rate:
+        return (len(y_pred) - num_right) / len(y_pred)
+    else:
+        return num_right / len(y_pred)
