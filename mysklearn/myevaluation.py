@@ -10,6 +10,7 @@ that will be used within this project.
 
 import mysklearn.myutils as myutils
 import numpy as np
+import random
 import math
 
 def train_test_split(X, y, test_size=0.33, random_state=None, shuffle=True):

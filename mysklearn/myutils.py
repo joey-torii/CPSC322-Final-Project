@@ -454,3 +454,137 @@ def compute_accuracy(y_pred, y_test, error_rate = False):
         return (len(y_pred) - num_right) / len(y_pred)
     else:
         return num_right / len(y_pred)
+
+
+def categorize_colors(data):
+    labels = []
+
+    for i in data:
+        if "blue" in i or "Blue" in i:
+            labels.append("blue")
+        else:
+            labels.append("red")
+
+    return labels
+
+
+def temp_bins(data):
+    labels = []
+
+    for i in data:
+        if i < 5000:
+            labels.append("low")
+        elif i < 10000:
+            labels.append("medium-low")
+        elif i < 15000:
+            labels.append("medium")
+        elif i < 20000:
+            labels.append("medium-high")
+        else:
+            labels.append("high")
+    
+
+    return labels
+
+
+def luminosity_bins(data):
+    labels = []
+
+    for i in data:
+        if i < 85000:
+            labels.append("0-85000")
+        elif i < 170000:
+            labels.append("85001-170000")
+        elif i < 255000:
+            labels.append("170001-255000")
+        elif i < 340000:
+            labels.append("255001-340000")
+        else:
+            labels.append("greater than 340001")
+
+    return labels
+
+def get_radius(data):
+    labels = []
+    
+    for i in data:
+        if i < 100:
+            labels.append("0 - 100")
+        elif i < 150:
+            labels.append("100.01 - 150")
+        elif i < 200:
+            labels.append("150.01 - 200")
+        else:
+            labels.append("> 200")
+
+    return labels
+
+
+def get_magnitude(data):
+    labels = []
+
+    for i in data:
+        if i < -5:
+            labels.append("-11 - -5")
+        elif i < 0:
+            labels.append("-4.99 - 0")
+        elif i < 5:
+            labels.append("0.01 - 5")
+        elif i < 10:
+            labels.append("5.01 - 10")
+        elif i < 15:
+            labels.append("10.01 - 15")
+        else:
+            labels.append("greater than 15")
+
+    return labels
+
+
+def get_spectral_class(data):
+    labels = []
+
+    for i in data:
+        if i == 'M':
+            labels.append("M")
+        elif i == 'B':
+            labels.append("B")
+        else:
+            labels.append("other")
+            
+    return labels
+
+
+def get_from_folds(X_vals, y_vals, train_folds, test_folds):
+    """Computes training and test sets
+
+    Args:
+        X_vals: list of x values
+        y_vals: List of y values
+        train_folds: List of training folds
+        test_folds: List of testing folds
+         
+    Returns:
+        X_train: List of X trining sets
+        y_train: List of y training sets
+        X_test: List of X test sets
+        y_test List of y test sets
+    """
+
+    X_train = []
+    y_train = []
+    for row in train_folds:
+        for i in row:
+            X_train.append(X_vals[i])
+            y_train.append(y_vals[i])
+
+    X_test = []
+    y_test = []
+    for row in test_folds:
+        for i in row:
+            X_test.append(X_vals[i])
+            y_test.append(y_vals[i])
+
+    return X_train, y_train, X_test, y_test
+
+
+
