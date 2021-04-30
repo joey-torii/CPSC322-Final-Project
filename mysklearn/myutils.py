@@ -37,38 +37,6 @@ def frequency_diagram(frequencies, title, x_label, y_label):
     plt.show()
 
 
-def pie_chart(values, labels, title):
-    plt.figure()
-    plt.pie(values, labels=labels, autopct="%1.1f%%")
-    plt.title(title)
-    plt.show()
-
-
-def histogram(values, title, x_label, y_label):
-    plt.figure()
-    plt.hist(values)
-
-    # label diagram
-    plt.title(title)
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.show()
-
-
-def plot_and_fit(xs, ys, title, x_label, y_label):
-    plt.figure()
-    plt.scatter(xs, ys, linewidths=0.5, alpha=0.5)
-
-    m, b = compute_slope_intercept(xs, ys)
-    plt.plot([min(xs), max(xs)], [m * min(xs) + b, m * max(xs) + b], c="r", lw=5)
-
-    # label diagram
-    plt.title(title)
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.show()
-
-
 def compute_slope_intercept(x, y):
     mean_x = np.mean(x)
     mean_y = np.mean(y)
@@ -77,19 +45,6 @@ def compute_slope_intercept(x, y):
     # y = mx + b => b = y - mx
     b = mean_y - m * mean_x
     return m, b 
-
-
-def box_plot(distributions, labels, title, x_label, y_label):
-    plt.figure()
-    plt.boxplot(distributions)
-
-    plt.xticks(list(range(1, len(labels) + 1)), labels, rotation='vertical')
-
-    # label diagram
-    plt.title(title)
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.show()
 
 
 def load_data(filename):
@@ -231,10 +186,7 @@ def partition_instances(instances, att_index, att_domains):
     return partitions
     
 
-# TODO: FIX AND COMMENT
 def tdidt(instances, att_indexes, att_domains, class_index):
-    # basic approach (uses recursion!!):
-
     # select an attribute to split on
     split_attribute = select_attribute(instances, att_indexes, class_index)
     att_indexes.remove(split_attribute)
@@ -408,7 +360,7 @@ def group_by(table, group_by_col_name):
 # functions for project
 # 
 ##############################################################
-def compute_bootstrapped_sample(X_train, y_train, seed = None):
+def compute_sample(X_train, y_train, seed = None):
     if seed is not None:
         random.seed(seed)
 
@@ -552,39 +504,5 @@ def get_spectral_class(data):
             labels.append("other")
             
     return labels
-
-
-def get_from_folds(X_vals, y_vals, train_folds, test_folds):
-    """Computes training and test sets
-
-    Args:
-        X_vals: list of x values
-        y_vals: List of y values
-        train_folds: List of training folds
-        test_folds: List of testing folds
-         
-    Returns:
-        X_train: List of X trining sets
-        y_train: List of y training sets
-        X_test: List of X test sets
-        y_test List of y test sets
-    """
-
-    X_train = []
-    y_train = []
-    for row in train_folds:
-        for i in row:
-            X_train.append(X_vals[i])
-            y_train.append(y_vals[i])
-
-    X_test = []
-    y_test = []
-    for row in test_folds:
-        for i in row:
-            X_test.append(X_vals[i])
-            y_test.append(y_vals[i])
-
-    return X_train, y_train, X_test, y_test
-
 
 

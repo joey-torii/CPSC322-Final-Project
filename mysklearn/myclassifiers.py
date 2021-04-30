@@ -469,6 +469,7 @@ class MyRandomForestClassifier:
 
     def fit(self, X_train, y_train):
         ''' Fits the random forest model to a given training set
+        
         Args:
             X_train(list of list of obj): The list of training instances (samples).
                 The shape of X_train is (n_train_samples, n_features)
@@ -482,11 +483,11 @@ class MyRandomForestClassifier:
 
         # generate N learners
         for i in range(self.N):
-            # create the bootstrap sample
+            # create the bootstrap sample with or without seed
             if self.seed is None:
-                X_sample, Y_sample = myutils.compute_bootstrapped_sample(self.X_train, self.y_train)
+                X_sample, Y_sample = myutils.compute_sample(self.X_train, self.y_train)
             else:
-                X_sample, Y_sample = myutils.compute_bootstrapped_sample(self.X_train, self.y_train, self.seed)
+                X_sample, Y_sample = myutils.compute_sample(self.X_train, self.y_train, self.seed)
 
             # create the validation set
             X_val = [x for x in self.X_train if x not in X_sample]
@@ -494,7 +495,7 @@ class MyRandomForestClassifier:
             y_val = [self.y_train[i] for i in range(len(self.y_train)) if i in y_idxs]
 
             # get only a random subset of attributes for each sample
-            values = [x for x in range(len(self.X_train[0]))] # num of items in header
+            values = [x for x in range(len(self.X_train[0]))] 
 
             if self.seed is None:
                 F_attributes = myutils.compute_random_subset(values, self.F)
@@ -521,12 +522,11 @@ class MyRandomForestClassifier:
 
         # sort the dists and move the indices to match the sorted list 
         # by combining the two lists into a list of tuples, sorting, and unpacking
-        sorted_accs, sorted_idxs = (list(x) for x in zip(*sorted(zip(self.accuracies, range(len(self.learners))))))
+        sorted_accuracies, sorted_idxs = (list(x) for x in zip(*sorted(zip(self.accuracies, range(len(self.learners))))))
 
         # slice the lists to only include the M best learners
         self.learners = [self.learners[i] for i in range(len(self.learners)) if i in sorted_idxs[:self.M]]
-        # self.learners = sorted_learners[:M + 1]
-        self.accuracies = sorted_accs[:self.M]
+        self.accuracies = sorted_accuracies[:self.M]
 
 
     def predict(self, X_test):
