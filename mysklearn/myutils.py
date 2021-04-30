@@ -405,27 +405,31 @@ def group_by(table, group_by_col_name):
 
 ##############################################################
 #
-# new functions for project
+# functions for project
 # 
 ##############################################################
-
 def compute_bootstrapped_sample(X_train, y_train, seed = None):
     if seed is not None:
         random.seed(seed)
-    n = len(X_train)
+
+    x_length = len(X_train)
     X_sample = []
     y_sample = []
-    for _ in range(n):
-        rand_index = random.randrange(0, n)
+
+    for _ in range(x_length):
+        rand_index = random.randrange(0, x_length)
         X_sample.append(X_train[rand_index])
         y_sample.append(y_train[rand_index])
+
     return X_sample, y_sample
 
 def compute_random_subset(values, num_values, seed = None):
     if seed is not None:
         random.seed(seed)
+
     shuffled = values[:] # shallow copy
     random.shuffle(shuffled)
+
     return sorted(shuffled[:num_values])
 
 def compute_accuracy(y_pred, y_test, error_rate = False):
@@ -441,9 +445,11 @@ def compute_accuracy(y_pred, y_test, error_rate = False):
 
     '''
     num_right = 0
+
     for i in range(len(y_pred)):
         if y_pred[i] == y_test[i]:
             num_right += 1
+
     if error_rate:
         return (len(y_pred) - num_right) / len(y_pred)
     else:
