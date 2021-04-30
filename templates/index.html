@@ -11,7 +11,7 @@
     <p>Enter data about the star to predict its type</p>
 
     <!-- temp, lum, rad, mag, color, spec -->
-    <form method="GET" action="/predict">
+    <form method="GET" action="/api/predict">
         <div class="form-group">
             <div class="form-row">
                 <label for="Temperature">Temperature (K)</label>
@@ -56,11 +56,7 @@
         </small>
     </form>
 
-    {% if result is not None %}
-        <h2>That star might be a {{ result }}</h2>
-    {% elif result == -1 %}
-        <h2>There was an error identifying this star</h2>
-    {% endif %}
+
     
 </body>
 </html>
