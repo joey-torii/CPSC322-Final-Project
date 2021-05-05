@@ -10,7 +10,7 @@ from mysklearn.myclassifiers import MyKNeighborsClassifier, MySimpleLinearRegres
 
 
 app = Flask(__name__)
-colors = ["red", "blue", "other"]
+star_colors = ["red", "blue", "other"]
 spectral_classes = ["O", "B", "A", "F", "G", "K", "M"]
 
 @app.route("/")
