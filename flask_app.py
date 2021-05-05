@@ -5,75 +5,68 @@ from flask import Flask
 from flask import render_template
 from flask import request, jsonify, redirect
 
-app = Flask(__name__)
+import mysklearn.myutils as myutils
+from mysklearn.myclassifiers import MyKNeighborsClassifier, MySimpleLinearRegressor, MyNaiveBayesClassifier, MyZeroRClassifier, MyRandomClassifier, MyDecisionTreeClassifier
 
-########################################################
-#
-# TODO: FIX AND COMMENT THIS WHOLE FILE
-#
-########################################################
-
-# @app.route('/', methods = ['GET', 'POST'])
-# def index_page():
-#     prediction = ""
-#     if request.method == "POST":
-#         level = request.form["level"]
-#         lang = request.form["lang"]
-#         tweets = request.form["tweets"]
-#         phd = request.form["phd"]
-#         prediction = predict_interviews_well([level, lang, tweets, phd])
-#     print("prediction:", prediction)
-#     # goes into templates folder and finds given name
-#     return render_template("index.html", prediction=prediction) 
-
-# @app.route('/predict', methods=["GET"])
-# def predict():
-#     level = request.args.get("level")
-#     lang = request.args.get("lang")
-#     tweets = request.args.get("tweets")
-#     phd = request.args.get("phd")
-    
-#     prediction = predict_interviews_well([level, lang, tweets, phd])
-#     if prediction is not None:
-#         # success!
-#         result = {"prediction": prediction}
-#         return jsonify(result), 200
-#     else:
-#         return "Error making prediction", 400
-
-# # recursive
-# def tdidt_classifier(tree, header, instance):
-#     info_type = tree[0]
-#     if info_type == "Attribute":
-#         attribute_index = header.index(tree[1])
-#         test_value = instance[attribute_index]
-#         for i in range(2, len(tree)):
-#             value_list = tree[i]
-#             if value_list[1] == test_value:
-#                 return tdidt_classifier(value_list[2], header, instance)
-#     else: # info_type == "Leaf"
-#         leaf_label = tree[1]
-#         return leaf_label
-
-# def predict_interviews_well(unseen_instance):
-#     # deserialize to object (unpickle)
-#     infile = open("tree.p", "rb")
-#     header, interview_tree = pickle.load(infile)
-#     infile.close()
-#     try:
-#         return tdidt_classifier(interview_tree, header, unseen_instance)
-#     except:
-#         return None
-
-# if __name__ == "__main__":
-#     port = int(os.environ.get("PORT", 5000))
-#     app.run(host='0.0.0.0', port=port, debug=False)
 
 app = Flask(__name__)
+colors = ["red", "blue", "other"]
+spectral_classes = ["O", "B", "A", "F", "G", "K", "M"]
 
 @app.route("/")
 def index():
-    return "<h1>Hello World!</h1>"
+    return render_template("index.html", colors=star_colors, scs=spectral_classes)
+
+
+# Temp, L (luminosity), R (radius), A_M (magnitute), Color, Spectral_Class -> Type
+@app.route("/api/predict")
+def get_api_prediction():
+    temp = request.args.get("temp", "")
+    lum = request.args.get("lum", "")
+    rad = request.args.get("rad", "")
+    a_m = request.args.get("mag", "")
+    color = request.args.get("color", "")
+    s_c = request.args.get("spc", "")
+
+    # load classifier
+    prediction = predict_star(temp, lum, rad, a_m, color, s_c)
+    if prediction is not None:
+        return jsonify({"star_type": prediction}), 200
+    else:
+        return "prediction failed", 400
+
+
+@app.route("/predict")
+def get_prediction():
+    temp = request.args.get("temp", "")
+    lum = request.args.get("lum", "")
+    rad = request.args.get("rad", "")
+    a_m = request.args.get("mag", "")
+    color = request.args.get("color", "")
+    s_c = request.args.get("spc", "")
+
+    # load classifier
+    prediction = predict_star(temp, lum, rad, a_m, color, s_c)
+    if prediction is not None:
+        return render_template("index.html", colors=star_colors, scs=spectral_classes, result=prediction)
+    else:
+        return render_template("index.html", colors=star_colors, scs=spectral_classes, result=-1)
+
+
+# Helper functions
+def predict_star(temperature, l, r, a_m, color, s_c):
+    infile = open("classifier.p")
+    classifier = pickle.load(infile)    # classifier is ____ object
+    infile.close()
+
+    try:
+        instance = [[temperature, l, r, a_m, color, s_c]]
+        prediction = classifier.predict(instance)
+        return prediction
+    except:
+        return None
+
+
 
 if __name__ == "__main__":
     app.run()

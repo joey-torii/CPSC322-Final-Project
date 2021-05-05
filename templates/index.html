@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Identifier</title>
+</head>
+<body>
+    <h1>What kind of star is that?</h1>
+    <p>Enter data about the star to predict its type</p>
+
+    <!-- temp, lum, rad, mag, color, spec -->
+    <form method="GET" action="/predict">
+        <div class="form-group">
+            <div class="form-row">
+                <label for="Temperature">Temperature (K)</label>
+                <input name="temp" id="temp" type="number"/>
+            </div>
+            <div class="form-row">
+                <label for="">Luminosity (L/Lo)</label>
+                <input name="lum" id="lum" type="number"/>
+            </div>
+            <div class="form-row">
+                <label for="">Radius (R/Ro)</label>
+                <input name="rad" id="rad" type="number"/>
+            </div>
+            <div class="form-row">
+                <label for="">Magnitude (Mv)</label>
+                <input name="mag" id="mag" type="number"/>
+            </div>
+            <div class="form-row">
+                <label for="">Color</label>
+                <select class="form-control" name="color" id="color">
+                    {% for c in colors %}
+                    <option>{{ c }}</option>
+                    {% endfor %} 
+                </select> 
+            </div>
+            <div class="form-row">
+                <label for="">Spectral Class</label>
+                <select class="form-control" name="spc" id="spc">
+                    {% for spec_class in scs %}
+                    <option>{{ spec_class }}</option>
+                    {% endfor %} 
+                </select> 
+            </div>
+            <button type="submit">Submit</button>
+        </div>
+        <br>
+        <br>
+        <small>
+            Luminosity and radius are relative to average luminosity and radius of the sun.
+            Lo = 3.828 x 10^26 Watts
+            Ro = 6.9551 x 10^8 m
+        </small>
+    </form>
+
+    {% if result is not None %}
+        <h2>That star might be a {{ result }}</h2>
+    {% elif result == -1 %}
+        <h2>There was an error identifying this star</h2>
+    {% endif %}
+    
+</body>
+</html>
