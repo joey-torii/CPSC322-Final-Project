@@ -483,10 +483,10 @@ class MyRandomForestClassifier:
         # generate N learners
         for i in range(self.N):
             # create the bootstrap sample
-            if self.seed is not None:
-                X_sample, Y_sample = myutils.compute_bootstrapped_sample(self.X_train, self.y_train, self.seed)
-            else:
+            if self.seed is None:
                 X_sample, Y_sample = myutils.compute_bootstrapped_sample(self.X_train, self.y_train)
+            else:
+                X_sample, Y_sample = myutils.compute_bootstrapped_sample(self.X_train, self.y_train, self.seed)
 
             # create the validation set
             X_val = [x for x in self.X_train if x not in X_sample]
