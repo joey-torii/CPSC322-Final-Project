@@ -18,10 +18,6 @@ def index():
     return render_template("index.html", colors=star_colors, scs=spectral_classes)
 
 
-@app.route("/test/<testp>")
-def test_param(testp):
-    return jsonify({"result": testp})
-
 # Temp, L (luminosity), R (radius), A_M (magnitute), Color, Spectral_Class -> Type
 @app.route("/api/predict", methods=['GET'])
 def get_api_prediction():
@@ -46,7 +42,7 @@ def get_api_prediction():
 # Helper functions
 def predict_star(temperature, l, r, a_m, color, s_c):
     infile = open("decision_tree.p", "rb")
-    classifier = pickle.load(infile)    # classifier is ____ object
+    classifier = pickle.load(infile)    # classifier is decision tree object
     infile.close()
     print("loaded classifier")
 

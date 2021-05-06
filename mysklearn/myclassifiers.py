@@ -15,6 +15,8 @@ import copy
 
 from collections import Counter
 
+import mysklearn.myevaluation as myevaluation
+
 class MySimpleLinearRegressor:
     """Represents a simple linear regressor.
 
@@ -480,6 +482,12 @@ class MyRandomForestClassifier:
         self.learners = []
         self.accuracies = []
 
+
+        x_sample, x_test, y_sample, y_test = myevlauation.train_test_split(self.X_train, self.y_train)
+        joined_sample = [sample + y_sample[i] for i, sample in x_sample]
+        joined_test = [test + y_test[i] for i, test in x_test]
+
+        
         # generate N learners
         for i in range(self.N):
             # create the bootstrap sample
@@ -488,10 +496,12 @@ class MyRandomForestClassifier:
             else:
                 X_sample, Y_sample = myutils.compute_bootstrapped_sample(self.X_train, self.y_train, self.seed)
 
+            print("samples:", len(X_sample), len(Y_sample))
             # create the validation set
             X_val = [x for x in self.X_train if x not in X_sample]
             y_idxs = [self.X_train.index(x) for x in X_val]
-            y_val = [self.y_train[i] for i in range(len(self.y_train)) if i in y_idxs]
+            y_val = [self.y_train[j] for j in y_idxs]
+
 
             # get only a random subset of attributes for each sample
             values = [x for x in range(len(self.X_train[0]))] # num of items in header
@@ -517,6 +527,7 @@ class MyRandomForestClassifier:
             # test the trees accuracy on the validation set
             y_pred = tree.predict(X_val)
 
+            print(len(y_pred), len(y_val))
             self.accuracies.append(myutils.compute_accuracy(y_pred, y_val))
 
         # sort the dists and move the indices to match the sorted list 

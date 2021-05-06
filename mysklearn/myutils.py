@@ -408,7 +408,7 @@ def group_by(table, group_by_col_name):
 # functions for project
 # 
 ##############################################################
-def compute_bootstrapped_sample(X_train, y_train, seed = None):
+def compute_bootstrapped_sample(X_train, y_train, seed=None):
     if seed is not None:
         random.seed(seed)
 
